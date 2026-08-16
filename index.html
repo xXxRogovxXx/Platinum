@@ -1,0 +1,395 @@
+<title>Платиновый зал</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  /* ── Deliberate single-theme trophy case: dark, painted explicitly so it
+     holds on any host ground (light or dark viewer). ─────────────────── */
+  :root{
+    --void:#070810;
+    --ground:#0b0d17;
+    --panel:#11142099;
+    --panel-solid:#12151f;
+    --line:#232838;
+    --line-soft:#1a1e2b;
+    --ink:#eef1f8;
+    --ink-dim:#a5adc2;
+    --ink-faint:#6a7189;
+    /* platinum sheen */
+    --plat-1:#f4f7ff;
+    --plat-2:#c3cde0;
+    --plat-3:#8b97b3;
+    /* playstation */
+    --ps:#3b82ff;
+    --ps-2:#63a0ff;
+    --ps-glow:#3b82ff40;
+    /* pc / steam bronze-steel */
+    --pc:#c9a24b;
+    --pc-2:#e2c274;
+    --pc-glow:#c9a24b33;
+    --radius:14px;
+    --maxw:1180px;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:"Helvetica Neue",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 700px at 50% -8%, #182036 0%, transparent 60%),
+      radial-gradient(900px 500px at 88% 8%, #10233f55 0%, transparent 55%),
+      var(--void);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+
+  /* ── Hero ─────────────────────────────────────────────── */
+  header.hero{position:relative;padding:clamp(56px,10vh,120px) 0 clamp(32px,5vh,56px)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:12px;letter-spacing:.42em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:600;margin-bottom:22px;
+  }
+  .eyebrow::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--plat-3))}
+  .eyebrow::after{content:"";width:34px;height:1px;background:linear-gradient(90deg,var(--plat-3),transparent)}
+  h1.title{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(48px,10vw,116px);
+    line-height:.94;
+    letter-spacing:-.02em;
+    text-wrap:balance;
+    background:linear-gradient(100deg,var(--plat-3) 0%,var(--plat-1) 22%,var(--plat-2) 40%,var(--plat-1) 60%,var(--plat-3) 100%);
+    background-size:220% 100%;
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    animation:sheen 7s ease-in-out infinite;
+    filter:drop-shadow(0 2px 20px #0008);
+  }
+  @keyframes sheen{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
+  .subtitle{
+    margin-top:22px;max-width:60ch;
+    color:var(--ink-dim);font-size:clamp(15px,2vw,18px);font-weight:400;
+  }
+  .subtitle b{color:var(--ink);font-weight:600}
+
+  /* stat strip */
+  .stats{
+    margin-top:clamp(30px,5vh,48px);
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:1px;background:var(--line-soft);
+    border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  }
+  .stat{background:var(--panel-solid);padding:20px 22px;position:relative}
+  .stat .num{
+    font-family:var(--serif);font-size:clamp(30px,4.5vw,44px);line-height:1;
+    font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;
+    letter-spacing:-.01em;
+  }
+  .stat .num.ps{color:var(--ps-2)}
+  .stat .num.pc{color:var(--pc-2)}
+  .stat .lbl{margin-top:9px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+
+  /* ── Controls bar ─────────────────────────────────────── */
+  .controls{
+    position:sticky;top:0;z-index:20;
+    margin-top:clamp(40px,7vh,72px);
+    padding:14px 0;
+    background:linear-gradient(180deg,var(--void) 55%,transparent);
+  }
+  .controls-inner{
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+    background:var(--panel-solid);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:10px 12px;
+    box-shadow:0 12px 40px -20px #000;
+    backdrop-filter:blur(8px);
+  }
+  .search{flex:1 1 220px;position:relative;min-width:180px}
+  .search input{
+    width:100%;background:var(--void);border:1px solid var(--line);
+    border-radius:10px;color:var(--ink);font-family:var(--sans);font-size:15px;
+    padding:11px 14px 11px 40px;outline:none;transition:border-color .2s,box-shadow .2s;
+  }
+  .search input::placeholder{color:var(--ink-faint)}
+  .search input:focus{border-color:var(--plat-3);box-shadow:0 0 0 3px #c3cde01f}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.5}
+  .tabs{display:flex;gap:4px;background:var(--void);border:1px solid var(--line);border-radius:10px;padding:4px}
+  .tab{
+    appearance:none;border:0;background:transparent;cursor:pointer;
+    color:var(--ink-dim);font-family:var(--sans);font-weight:600;font-size:13.5px;
+    letter-spacing:.02em;padding:8px 15px;border-radius:7px;transition:.18s;white-space:nowrap;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab[aria-pressed="true"]{background:var(--panel-solid);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+  .tab .dot{width:8px;height:8px;border-radius:50%}
+  .tab.all[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--plat-3)}
+  .tab.ps .dot{background:var(--ps)}
+  .tab.pc .dot{background:var(--pc)}
+  .count-live{margin-left:auto;font-size:12.5px;color:var(--ink-faint);font-weight:600;letter-spacing:.04em;padding-right:6px;white-space:nowrap}
+  .count-live b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+  /* ── Timeline ─────────────────────────────────────────── */
+  main{padding:clamp(20px,4vh,44px) 0 40px}
+  .year-block{
+    display:grid;grid-template-columns:170px 1fr;gap:clamp(18px,3vw,44px);
+    padding:clamp(24px,4vh,40px) 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .year-block:first-child{border-top:0}
+  .year-head{position:relative}
+  .year-sticky{position:sticky;top:96px}
+  .year-num{
+    font-family:var(--serif);font-weight:600;
+    font-size:clamp(40px,6vw,62px);line-height:.9;letter-spacing:-.02em;
+    color:var(--ink);font-variant-numeric:tabular-nums;
+    background:linear-gradient(180deg,var(--plat-1),var(--plat-3));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  }
+  .year-meta{margin-top:10px;font-size:12px;letter-spacing:.06em;color:var(--ink-faint);font-weight:600}
+  .year-meta .yc{color:var(--ink-dim)}
+
+  .games{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;align-content:start}
+  .card{
+    display:flex;align-items:center;gap:13px;
+    background:var(--panel-solid);
+    border:1px solid var(--line-soft);
+    border-radius:12px;padding:11px 13px;
+    transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    position:relative;overflow:hidden;
+  }
+  .card::after{
+    content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;
+    background:linear-gradient(120deg,transparent 40%,#ffffff10 50%,transparent 60%);
+    transform:translateX(-120%);transition:transform .5s ease;
+  }
+  .card:hover{transform:translateY(-2px);border-color:var(--line);background:#151925}
+  .card:hover::after{transform:translateX(120%)}
+  .mono{
+    flex:0 0 auto;width:42px;height:42px;border-radius:9px;
+    display:grid;place-items:center;
+    font-family:var(--serif);font-weight:700;font-size:20px;color:#0b0d17;
+    position:relative;
+  }
+  .card.ps .mono{background:linear-gradient(145deg,var(--ps-2),var(--ps));box-shadow:0 4px 16px -6px var(--ps-glow)}
+  .card.pc .mono{background:linear-gradient(145deg,var(--pc-2),var(--pc));box-shadow:0 4px 16px -6px var(--pc-glow)}
+  .card-body{min-width:0;flex:1}
+  .card-title{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.28;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .badge{
+    margin-top:5px;display:inline-flex;align-items:center;gap:5px;
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  }
+  .card.ps .badge{color:var(--ps-2)}
+  .card.pc .badge{color:var(--pc-2)}
+  .badge .ico{font-size:11px}
+
+  .empty{grid-column:1/-1;color:var(--ink-faint);padding:30px 4px;text-align:center;font-size:15px}
+
+  /* ── Footer ───────────────────────────────────────────── */
+  footer{border-top:1px solid var(--line-soft);margin-top:20px;padding:44px 0 70px;color:var(--ink-faint);font-size:13.5px}
+  footer .fw{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:baseline}
+  footer b{color:var(--ink-dim)}
+  .diamond{color:var(--plat-2)}
+
+  @media (max-width:640px){
+    .year-block{grid-template-columns:1fr;gap:14px}
+    .year-sticky{position:static}
+    .year-num{font-size:44px}
+    .count-live{width:100%;order:5;margin:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto}
+    .card::after{display:none}
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Платиновый зал</span>
+    <h1 class="title" id="ownerTitle">Коллекция</h1>
+    <p class="subtitle">
+      Четырнадцать лет доведённых до конца игр — <b>каждая</b> платина на PlayStation
+      и <b>каждая</b> стопроцентовка на ПК, добытые одна за другой с 2012 по 2026 год.
+    </p>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="controls-inner">
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="q" type="search" placeholder="Поиск среди 250+ игр…" autocomplete="off" aria-label="Поиск игр">
+      </label>
+      <div class="tabs" role="group" aria-label="Фильтр по платформе">
+        <button class="tab all" data-f="all" aria-pressed="true">Все</button>
+        <button class="tab ps" data-f="ps" aria-pressed="false"><span class="dot"></span>Платины</button>
+        <button class="tab pc" data-f="pc" aria-pressed="false"><span class="dot"></span>100%</button>
+      </div>
+      <span class="count-live" id="live"></span>
+    </div>
+  </div>
+</div>
+
+<main class="wrap" id="timeline"></main>
+
+<footer>
+  <div class="wrap fw">
+    <span><b class="diamond">◆</b> Живой трофейный зал — список пополняется со временем.</span>
+    <span>Для друга, который <b>никогда не бросает игру недопройденной</b>.</span>
+  </div>
+</footer>
+
+<script type="application/json" id="data">
+{
+  "2012":["The Darkness 2","Hell Yeah!"],
+  "2013":["Call of Duty: Ghosts","Call of Duty: Modern Warfare 2","Dynamite Jack","The Elder Scrolls 5: Skyrim","Half-Life 2","Orcs Must Die! 2","Portal 2","PROTOTYPE 2","Spec Ops: The Line","The Walking Dead"],
+  "2014":["A Bird Story","Botanicula","Brothers - A Tale of Two Sons","Call of Duty: Advanced Warfare","Call of Duty: Black Ops 2","Call of Duty: Modern Warfare 3","Castle Crashers","Dead Island","Dead Island Riptide","Defy Gravity","Deponia","Deus Ex: The Fall","Fallout: New Vegas","Free to Play","Half-Life 2: Episode One","Hero of the Kingdom","Hexcells","Hexcells Plus","Kairo","LEGO Lord of the Rings","Metro 2033 Redux","Metro: Last Light Redux","MURDERED: SOUL SUSPECT","Only If","Papers, Please","Rock of Ages","The Room","The Stanley Parable","State of Decay","To the Moon","The Plan","The Walking Dead: Season Two","The Wolf Among Us","Wolfenstein: The New Order","Woodle Tree Adventures"],
+  "2015":["404Sight","Alchemy Mysteries: Prague Legends","Alien: Isolation","Ampu-Tea","Darkness Within 2: The Dark Lineage","Darkness Within: In Pursuit of Loath Nolder","Deus Ex: Human Revolution - Director's Cut","Deus Ex: Human Revolution - The Missing Link","Doodle God","Dracula's Legacy","Emily is Away","Estranged: Act I","FORCED","Frankenstein: Master of Death","Game of Thrones - A Telltale Games Series","Greyfox","Hero of the Kingdom 2","Home is Where One Starts...","Jurassic Park: The Game","Labyrinthine Dreams","Make it indie!","Narcissu 1st & 2nd","Nightmares from the Deep 2: The Siren's Call","Please, Don't Touch Anything","Port of Call","Portal Stories: Mel","Reversion - The Escape","Sinister City","State of Decay: YOSE Day One Edition","Tales from the Borderlands","Terra Incognita ~ Chapter One: The Descendant","Unium","The Vanishing of Ethan Carter","The Vanishing of Ethan Carter Redux","Wolfenstein: The Old Blood","Yet Another Zombie Defense"],
+  "2016":["Among the Sleep","Batman: The Telltale Series","Fable Anniversary","Fallout 4","Firewatch","Hitman: Absolution","I, Zombie","LYNE","Minecraft: Story Mode - A Telltale Games Series","Party Hard","Ryse: Son of Rome","Trine Enchanted Edition","The Walking Dead: Michonne","The Witcher 3: Wild Hunt"],
+  "2017":["The Average Everyday Adventures of Samantha Browne","F.E.A.R. 3","They Came From The Moon","Voxelized","The Walking Dead: A New Frontier"],
+  "2018":["The 39 Steps","Armello","Batman: The Enemy Within - The Telltale Series","DARK SOULS II: Scholar of the First Sin","DARK SOULS III","The Elder Scrolls V: Skyrim Special Edition","Finding Paradise","Hero of the Kingdom III","HITMAN","Marvel's Guardians of the Galaxy: The Telltale Series","Minecraft: Story Mode - Season Two","The Room Two","This Is the Police 2"],
+  "2019":["The Council","The Walking Dead: The Final Season"],
+  "2020":["Apex Legends","Batman: Arkham Asylum Game of the Year Edition","Borderlands Game of the Year Enhanced","Borderlands: The Pre-Sequel","Cyberpunk 2077","Graveyard Keeper","Hero of the Kingdom: The Lost Tales 1","Journey","Neighbours back From Hell","A Plague Tale: Innocence","State of Mind","Thronebreaker: The Witcher Tales","A Way Out"],
+  "2021":["Borderlands 2 RU","Call of Duty: Modern Warfare Remastered","Dishonored 2","Fallout Shelter","Impostor Factory","Metro Exodus","Twelve Minutes"],
+  "2022":["ЗВЁЗДНЫЕ ВОЙНЫ Джедаи: Павший Орден","Dishonored: Death of the Outsider","God of War","Hades","Metro Exodus Enhanced Edition","Metro: Last Light","A Plague Tale: Requiem","Stories: The Path of Destinies","Unpacking"],
+  "2023":["Ken Follett's The Pillars of the Earth","God of War: Ragnarök (PS5)","Marvel's Spider-Man Remastered (PS5)","Star Wars Jedi: Survivor (PS5)","Marvel's Spider-Man: Miles Morales (PS5)","The Expanse: A Telltale Series (PS5)","Marvel's Spider-Man 2 (PS5)","Alan Wake 2 (PS5)","Dredge (PS5)"],
+  "2024":["Cocoon (PS5)","Final Fantasy XVI (PS5)","Helldivers 2 (PS5)","The Last of Us Part I (PS5)","It Takes Two (PS5)","Ghost of Tsushima (PS5)","Nobody Wants to Die (PS5)","Warhammer 40,000: Space Marine 2 (PS5)","Untitled Goose Game (PS5)","Bloomtown: A Different Story","Lego Horizon Adventures (PS5)","Astro Bot (PS5)"],
+  "2025":["Split Fiction (PS5)","DOOMED Detective Game","Stardew Valley (PS5)","Lost Records: Bloom & Rage (PS5)","Doom: The Dark Ages (PS5)","One Way Home demo","Kena: Bridge of Spirits","No, I'm not a Human Demo","Cast n Chill","The Alters","One-Eyed Likho","Mafia: The Old Country (PS5)","Ghost of Yōtei (PS5)","Dispatch","Bully (PS5)"],
+  "2026":["Hogwarts Legacy (PS5)","Hades II","Reanimal (PS5)","God of War Sons of Sparta (PS5)","The Order: 1886 (PS5)","Pink Noise","Radiolight","Mixtape","007 First Light (PS5)","Lego Batman: Legacy of the Dark Knight (PS5)","Scottside"]
+}
+</script>
+
+<script>
+(function(){
+  var raw = JSON.parse(document.getElementById('data').textContent);
+
+  // Подбор иконки по названию игры (первое совпадение выигрывает).
+  var iconRules = [
+    [/spider-man/,'🕷️'],[/god of war/,'🪓'],[/dark souls/,'⚔️'],
+    [/elder scrolls|skyrim/,'🐉'],[/witcher|thronebreaker/,'🐺'],
+    [/metro/,'☢️'],[/fallout/,'☢️'],
+    [/call of duty|modern warfare|black ops|advanced warfare|ghosts/,'🎖️'],
+    [/spec ops/,'🪖'],[/helldivers/,'🪖'],
+    [/walking dead|dead island|state of decay|zombie|\bi, zombie/,'🧟'],
+    [/batman|arkham/,'🦇'],[/cyberpunk/,'🌆'],[/hitman/,'🔫'],
+    [/borderlands/,'💥'],[/portal/,'🌀'],[/half-life/,'🧪'],
+    [/doom/,'👹'],[/wolfenstein/,'🎯'],[/hades/,'🔱'],
+    [/journey/,'🏜️'],[/firewatch/,'🔥'],[/stardew/,'🌾'],
+    [/ghost of/,'🗡️'],[/alien/,'👽'],[/prototype/,'🧬'],[/deus ex/,'🤖'],
+    [/plague tale/,'🐀'],[/star wars|jedi/,'🌌'],[/minecraft/,'🟩'],
+    [/lego/,'🧱'],[/papers, please/,'🛂'],[/unpacking/,'📦'],
+    [/astro bot/,'🤖'],[/warhammer|space marine/,'💀'],[/goose/,'🦢'],
+    [/it takes two|a way out|split fiction/,'🤝'],[/last of us/,'🍄'],
+    [/final fantasy/,'💠'],[/hogwarts/,'🧙'],[/kena/,'🪄'],[/dredge/,'🎣'],
+    [/alan wake/,'🔦'],[/cocoon/,'🐛'],[/bully/,'🎒'],[/mafia/,'🎩'],
+    [/007|first light/,'🕴️'],[/stanley parable/,'🚪'],[/dishonored/,'🗡️'],
+    [/to the moon|finding paradise|impostor factory|a bird story/,'🌙'],
+    [/hexcells|\blyne\b|doodle god|labyrinth|reversion|terra incognita/,'🧩'],
+    [/the room/,'🧩'],[/hero of the kingdom/,'🏰'],[/telltale|game of thrones|expanse|guardians of the galaxy|tales from|the wolf among us/,'🎭'],
+    [/darkness within|nightmares|sinister|frankenstein|dracula|among the sleep|f\.e\.a\.r|murdered/,'👻'],
+    [/apex legends/,'🎯'],[/twelve minutes/,'⏱️'],[/graveyard keeper/,'⚰️'],
+    [/ryse|castle crashers|brothers|39 steps|armello|council/,'🛡️'],
+    [/fable/,'🧚'],[/trine/,'🧝'],[/party hard/,'🎉'],[/emily is away/,'💬'],
+    [/police/,'🚓'],[/pillars of the earth/,'⛪'],[/nobody wants to die|no, i'm not a human/,'🕵️'],
+    [/rock of ages/,'🪨'],[/orcs must die/,'👺'],[/free to play|make it indie/,'🎬'],
+    [/demo\b/,'🕹️']
+  ];
+  function iconFor(t){
+    var s = t.toLowerCase();
+    for(var i=0;i<iconRules.length;i++){ if(iconRules[i][0].test(s)) return iconRules[i][1]; }
+    return '🎮';
+  }
+
+  // Build normalized model
+  var years = Object.keys(raw).sort();
+  var model = years.map(function(y){
+    var games = raw[y].map(function(t){
+      var isPs = /\(PS5\)\s*$/.test(t);
+      var clean = t.replace(/\s*\(PS5\)\s*$/,'').trim();
+      return {title:clean, plat:isPs?'ps':'pc', icon:iconFor(clean), key:clean.toLowerCase()};
+    });
+    return {year:y, games:games};
+  });
+
+  var all = model.reduce(function(a,y){return a.concat(y.games)},[]);
+  var totalPs = all.filter(function(g){return g.plat==='ps'}).length;
+  var totalPc = all.filter(function(g){return g.plat==='pc'}).length;
+  var span = (+years[years.length-1]) - (+years[0]) + 1;
+
+  // Stats
+  var stats = [
+    {num:all.length, lbl:'Игр покорено', cls:''},
+    {num:totalPs, lbl:'Платины на PlayStation', cls:'ps'},
+    {num:totalPc, lbl:'Стопроцентовки на ПК', cls:'pc'},
+    {num:span, lbl:'Лет подряд', cls:''},
+    {num:years[0]+'–'+years[years.length-1], lbl:'Весь путь', cls:''}
+  ];
+  document.getElementById('stats').innerHTML = stats.map(function(s){
+    return '<div class="stat"><div class="num '+s.cls+'">'+s.num+'</div><div class="lbl">'+s.lbl+'</div></div>';
+  }).join('');
+
+  // Render timeline
+  var tl = document.getElementById('timeline');
+  var esc = function(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+
+  function render(){
+    var f = state.filter, q = state.q.trim().toLowerCase();
+    var shown = 0;
+    var html = model.slice().reverse().map(function(yr){
+      var games = yr.games.filter(function(g){
+        if(f!=='all' && g.plat!==f) return false;
+        if(q && g.key.indexOf(q)<0) return false;
+        return true;
+      });
+      if(!games.length) return '';
+      shown += games.length;
+      var cards = games.map(function(g){
+        var badge = g.plat==='ps'
+          ? '<span class="badge"><span class="ico">◆</span>Платина</span>'
+          : '<span class="badge"><span class="ico">✦</span>100%</span>';
+        return '<div class="card '+g.plat+'">'+
+                 '<div class="mono">'+g.icon+'</div>'+
+                 '<div class="card-body"><div class="card-title">'+esc(g.title)+'</div>'+badge+'</div>'+
+               '</div>';
+      }).join('');
+      return '<section class="year-block"><div class="year-head"><div class="year-sticky">'+
+               '<div class="year-num">'+yr.year+'</div>'+
+               '<div class="year-meta"><span class="yc">'+games.length+'</span> '+plural(games.length)+'</div>'+
+             '</div></div><div class="games">'+cards+'</div></section>';
+    }).join('');
+
+    tl.innerHTML = html || '<section class="year-block"><div></div><div class="games"><div class="empty">Ничего не найдено — попробуй другой запрос.</div></div></section>';
+    var lbl = f==='ps'?plural(shown,'платина','платины','платин')
+            : f==='pc'?'× 100%'
+            : plural(shown,'игра','игры','игр');
+    document.getElementById('live').innerHTML = 'Показано: <b>'+shown+'</b> '+lbl;
+  }
+  function plural(n,one,few,many){
+    one=one||'игра';few=few||'игры';many=many||'игр';
+    var m10=n%10, m100=n%100;
+    if(m10===1&&m100!==11) return one;
+    if(m10>=2&&m10<=4&&(m100<10||m100>=20)) return few;
+    return many;
+  }
+
+  var state = {filter:'all', q:''};
+  document.getElementById('q').addEventListener('input',function(e){state.q=e.target.value;render()});
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'),function(btn){
+    btn.addEventListener('click',function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.tab'),function(b){b.setAttribute('aria-pressed','false')});
+      btn.setAttribute('aria-pressed','true');
+      state.filter=btn.dataset.f;render();
+    });
+  });
+  render();
+})();
+</script>
