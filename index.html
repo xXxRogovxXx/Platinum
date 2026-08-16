@@ -245,6 +245,7 @@
   <div class="wrap fw">
     <span><b class="diamond">◆</b> Живой трофейный зал — список пополняется со временем.</span>
     <span>Для друга, который <b>никогда не бросает игру недопройденной</b>.</span>
+    <span style="opacity:.55">Источник: <span id="src">…</span></span>
   </div>
 </footer>
 
@@ -270,7 +271,13 @@
 
 <script>
 (function(){
-  var raw = JSON.parse(document.getElementById('data').textContent);
+  // ─── Источник данных ────────────────────────────────────────────────
+  // Вставь сюда URL веб-приложения Google Apps Script (оканчивается на /exec) —
+  // и страница будет брать список прямо из Google Документа.
+  // Пусто = используется встроенная копия ниже (в блоке <script id="data">).
+  var DATA_URL = '';
+
+  var fallback = JSON.parse(document.getElementById('data').textContent);
 
   // Подбор иконки по названию игры (первое совпадение выигрывает).
   var iconRules = [
@@ -309,6 +316,7 @@
     return '🎮';
   }
 
+  function boot(raw){
   // Build normalized model
   var years = Object.keys(raw).sort();
   var model = years.map(function(y){
@@ -391,5 +399,23 @@
     });
   });
   render();
+  } // ← конец boot()
+
+  // Загрузка: сначала пробуем Google Docs, при любой ошибке — встроенная копия.
+  var srcEl = document.getElementById('src');
+  function setSrc(t){ if(srcEl) srcEl.textContent = t; }
+  if(DATA_URL){
+    setSrc('загрузка из Google Docs…');
+    fetch(DATA_URL + (DATA_URL.indexOf('?')<0?'?':'&') + 't=' + Date.now())
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(j){
+        if(j && Object.keys(j).length){ boot(j); setSrc('данные из Google Docs'); }
+        else { boot(fallback); setSrc('встроенная копия'); }
+      })
+      .catch(function(){ boot(fallback); setSrc('встроенная копия (Google Docs недоступен)'); });
+  } else {
+    boot(fallback);
+    setSrc('встроенная копия');
+  }
 })();
 </script>
