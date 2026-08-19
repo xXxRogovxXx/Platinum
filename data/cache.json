@@ -4138,5 +4138,29 @@
    }
   ],
   "ts": 1787126038190
+ },
+ "Forza Horizon 6": {
+  "appid": "2483190",
+  "ach": [
+   {
+    "n": "Maxed Out",
+    "d": "Earn 100 Levels in Horizon Play",
+    "p": 1.5,
+    "i": "https://shared.fastly.steamstatic.com/community_assets/images/apps/2483190/de56fbc7b29a40ca0c606eb16baf3738a9fc1f0a.jpg"
+   },
+   {
+    "n": "The Boss",
+    "d": "Earn the maximum Promotion in a Job",
+    "p": 3.4,
+    "i": "https://shared.fastly.steamstatic.com/community_assets/images/apps/2483190/0940e0f23cc537575133dc63fb5c7792a3bcdef9.jpg"
+   },
+   {
+    "n": "Historic Effort",
+    "d": "Earn a Series History Reward",
+    "p": 5.3,
+    "i": "https://shared.fastly.steamstatic.com/community_assets/images/apps/2483190/e96044e1769bdba47c8e93871fc37cfcff1c60cd.jpg"
+   }
+  ],
+  "ts": 1787126849200
  }
 }
