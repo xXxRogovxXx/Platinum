@@ -4162,5 +4162,29 @@
    }
   ],
   "ts": 1787126849200
+ },
+ "Clair Obscur: Expedition 33": {
+  "appid": "1903340",
+  "ach": [
+   {
+    "n": "Connoisseur",
+    "d": "Find all 33 music records.",
+    "p": 10.1,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/1903340/305998cd6052d4aa8b0b4e98299d20dbd915ebac.jpg"
+   },
+   {
+    "n": "Follow The Trail",
+    "d": "Find all of the journals from prior expeditions.",
+    "p": 10.2,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/1903340/762a3a319964d846e9fefc3219575029f75a21ff.jpg"
+   },
+   {
+    "n": "Survivor",
+    "d": "Reach level 99.",
+    "p": 12.9,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/1903340/67b062a511bbcdcf13e2ffecc4d800652962fb81.jpg"
+   }
+  ],
+  "ts": 1787127359749
  }
 }
