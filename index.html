@@ -189,6 +189,34 @@
   }
   .card:hover .tile-title{color:var(--ink)}
 
+  /* Панель редких достижений */
+  .rare-btn{
+    align-self:center;margin-top:1px;cursor:pointer;
+    background:var(--panel-solid);border:1px solid var(--line);border-radius:8px;
+    color:var(--ink-dim);font:600 11px/1 var(--sans);letter-spacing:.02em;
+    padding:6px 10px;display:inline-flex;align-items:center;gap:6px;transition:.15s;
+  }
+  .rare-btn:hover,.card.open .rare-btn{color:var(--ink);border-color:var(--plat-3)}
+  .rare-btn .chev{transition:transform .18s}
+  .card.open .rare-btn .chev{transform:rotate(180deg)}
+  .card.open{z-index:60}
+  .drop{
+    position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(6px);
+    width:min(280px,80vw);z-index:60;display:none;text-align:left;
+    background:var(--panel-solid);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 22px 54px -20px #000, 0 0 0 1px #0006;padding:10px;
+  }
+  .card.open .drop{display:block}
+  .drop-h{font:700 9.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);padding:2px 2px 9px}
+  .ach{display:flex;align-items:center;gap:9px;padding:7px 3px;border-top:1px solid var(--line-soft)}
+  .ach-i{width:30px;height:30px;border-radius:6px;flex:0 0 auto;background:#0e111a}
+  .ach-b{min-width:0;flex:1}
+  .ach-n{font:600 12px/1.25 var(--sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ach-d{font:400 10.5px/1.3 var(--sans);color:var(--ink-faint);margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ach-p{font:700 12px/1 var(--sans);color:var(--plat-2);font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .card.ps .ach-p{color:var(--ps-2)}
+  .card.pc .ach-p{color:var(--pc-2)}
+
   .empty{grid-column:1/-1;color:var(--ink-faint);padding:30px 4px;text-align:center;font-size:15px}
 
   /* ── Footer ───────────────────────────────────────────── */
@@ -282,6 +310,7 @@
   // Карта обложек: точное название игры → Steam appid. Обложки берутся из Steam CDN.
   var STEAM = 'https://cdn.cloudflare.steamstatic.com/steam/apps/';
   var coversMap = {};
+  var achMap = {};   // название → топ‑3 редких достижения Steam [{n,d,p,i}]
 
   // Подбор иконки по названию игры (первое совпадение выигрывает).
   var iconRules = [
@@ -330,7 +359,7 @@
     var clean = t.replace(/\s*\(PS5\)\s*$/,'').trim();
     var appid = coversMap[clean];               // запечённая обложка из covers.json
     if(appid){ cover = STEAM+appid+'/library_600x900.jpg'; alt = STEAM+appid+'/header.jpg'; }
-    return {title:clean, plat:isPs?'ps':'pc', cover:cover, alt:alt, icon:iconFor(clean), key:clean.toLowerCase()};
+    return {title:clean, plat:isPs?'ps':'pc', cover:cover, alt:alt, icon:iconFor(clean), key:clean.toLowerCase(), ach:(achMap[clean]||null)};
   }
   // Build normalized model
   var years = Object.keys(raw).sort();
@@ -373,10 +402,21 @@
       var cards = games.map(function(g){
         var sym = g.plat==='ps' ? '◆' : '✦';
         var img = g.cover ? '<img loading="lazy" src="'+esc(g.cover)+'" alt="" data-alt="'+esc(g.alt||'')+'" onerror="if(this.dataset.alt){this.src=this.dataset.alt;this.dataset.alt=\'\'}else{this.remove()}">' : '';
+        var rare = '';
+        if(g.ach && g.ach.length){
+          var rows = g.ach.map(function(a){
+            return '<div class="ach"><img class="ach-i" loading="lazy" src="'+esc(a.i)+'" alt="" onerror="this.style.visibility=\'hidden\'">'+
+                     '<div class="ach-b"><div class="ach-n">'+esc(a.n)+'</div>'+(a.d?'<div class="ach-d">'+esc(a.d)+'</div>':'')+'</div>'+
+                     '<div class="ach-p">'+a.p+'%</div></div>';
+          }).join('');
+          rare = '<button class="rare-btn" type="button" aria-expanded="false">◆ Топ‑3 редких<span class="chev">▾</span></button>'+
+                 '<div class="drop"><div class="drop-h">Самые редкие достижения</div>'+rows+'</div>';
+        }
         return '<div class="card '+g.plat+'" title="'+esc(g.title)+' — '+(g.plat==='ps'?'Платина':'100%')+'">'+
                  '<div class="art"><span class="mono-emoji">'+g.icon+'</span>'+img+
                    '<span class="pbadge">'+sym+'</span></div>'+
                  '<div class="tile-title">'+esc(g.title)+'</div>'+
+                 rare+
                '</div>';
       }).join('');
       return '<section class="year-block"><div class="year-head"><div class="year-sticky">'+
@@ -431,11 +471,29 @@
     }
   }
 
-  // Сначала карта обложек, затем данные (карта не критична — при сбое просто эмодзи).
-  fetch('covers.json?t=' + Date.now())
-    .then(function(r){ return r.ok ? r.json() : {}; })
-    .then(function(cm){ coversMap = cm || {}; })
-    .catch(function(){})
-    .then(loadData);
+  // Раскрытие/закрытие панели редких достижений (делегирование — переживает перерисовку).
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.rare-btn') : null;
+    var openCards = document.querySelectorAll('.card.open');
+    for(var i=0;i<openCards.length;i++){
+      if(btn && openCards[i].contains(btn)) continue;
+      openCards[i].classList.remove('open');
+      var b0 = openCards[i].querySelector('.rare-btn'); if(b0) b0.setAttribute('aria-expanded','false');
+    }
+    if(btn){
+      var card = btn.closest('.card');
+      var willOpen = !card.classList.contains('open');
+      card.classList.toggle('open', willOpen);
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      e.stopPropagation();
+    }
+  });
+
+  // Обложки и достижения тянем параллельно (обе карты не критичны), затем данные.
+  function j_(u){ return fetch(u + (u.indexOf('?')<0?'?':'&') + 't=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : {}; }).catch(function(){ return {}; }); }
+  Promise.all([ j_('covers.json'), j_('achievements.json') ]).then(function(res){
+    coversMap = res[0] || {}; achMap = res[1] || {};
+  }).then(loadData, loadData);
 })();
 </script>
