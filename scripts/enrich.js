@@ -111,16 +111,23 @@ async function main() {
 
   let resolved = 0;
   for (const title of games) {
-    const c = cache[title];
-    // Новая игра — ищем appid. Известная — берём из кэша.
-    let appid = c ? c.appid : await resolveAppId(title);
-    if (!c) { resolved++; await sleep(150); }
-
-    // Достижения: тянем, если их ещё нет (в т.ч. когда игра вышла позже).
-    let ach = c && c.ach ? c.ach : null;
-    if (appid && (!ach || ach.length === 0)) { ach = await topAchievements(appid); await sleep(150); }
-
-    cache[title] = { appid: appid || '', ach: ach || [], ts: Date.now() };
+    let e = cache[title];
+    if (!e) {
+      // Новая игра — ищем appid и достижения.
+      const appid = await resolveAppId(title);
+      await sleep(150);
+      const ach = appid ? await topAchievements(appid) : [];
+      if (appid) await sleep(150);
+      e = { appid: appid || '', ach: ach || [], ts: Date.now() };
+      cache[title] = e;
+      resolved++;
+    } else if (e.appid && (!e.ach || e.ach.length === 0)) {
+      // Добираем достижения, если раньше их не было (игра могла выйти позже).
+      const ach = await topAchievements(e.appid);
+      await sleep(150);
+      if (ach && ach.length) { e.ach = ach; e.ts = Date.now(); }
+    }
+    // Иначе — запись не трогаем: без изменений → без лишних коммитов.
   }
 
   // Собираем выходные файлы из кэша (только для игр, что есть в доке сейчас).
