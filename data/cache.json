@@ -4186,5 +4186,29 @@
    }
   ],
   "ts": 1787127359749
+ },
+ "The Sinking City 2": {
+  "appid": "2825860",
+  "ach": [
+   {
+    "n": "For Her",
+    "d": "Unlock all achievements.",
+    "p": 0.3,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/2825860/909aba1b6047b6a23491a2dcb0bc36ee799f970c.jpg"
+   },
+   {
+    "n": "From Oblivion",
+    "d": "",
+    "p": 0.4,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/2825860/e4aa9d8c150b4a0309804ed6d4a3fe0ef2a33e43.jpg"
+   },
+   {
+    "n": "What Dreams Are Made Of",
+    "d": "Obtain all Talents.",
+    "p": 0.7,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/2825860/2013d06373137a473ed6948a3fff089ffa630a02.jpg"
+   }
+  ],
+  "ts": 1787129511106
  }
 }
