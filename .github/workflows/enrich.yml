@@ -33,5 +33,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add covers.json achievements.json data/cache.json
           git commit -m "Auto-enrich: обложки и достижения из Steam"
-          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          # Пуш с повтором: если кто-то успел закоммитить — подтягиваем и пробуем снова.
+          for i in 1 2 3 4 5; do
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "Запушено с попытки $i."
+              exit 0
+            fi
+            echo "Push отклонён — подтягиваю удалённые изменения (попытка $i)…"
+            git pull --rebase --autostash -X theirs origin "${GITHUB_REF_NAME}" || true
+            sleep 3
+          done
+          echo "Не удалось запушить после 5 попыток." >&2
+          exit 1
