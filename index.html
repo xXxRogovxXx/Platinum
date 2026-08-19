@@ -279,6 +279,10 @@
 
   var fallback = JSON.parse(document.getElementById('data').textContent);
 
+  // Карта обложек: точное название игры → Steam appid. Обложки берутся из Steam CDN.
+  var STEAM = 'https://cdn.cloudflare.steamstatic.com/steam/apps/';
+  var coversMap = {};
+
   // Подбор иконки по названию игры (первое совпадение выигрывает).
   var iconRules = [
     [/spider-man/,'🕷️'],[/god of war/,'🪓'],[/dark souls/,'⚔️'],
@@ -324,6 +328,8 @@
     else { t=it.t||''; cover=it.c||''; alt=it.h||''; }
     var isPs = /\(PS5\)\s*$/.test(t) || (it && typeof it==='object' && it.p==='ps');
     var clean = t.replace(/\s*\(PS5\)\s*$/,'').trim();
+    var appid = coversMap[clean];               // запечённая обложка из covers.json
+    if(appid){ cover = STEAM+appid+'/library_600x900.jpg'; alt = STEAM+appid+'/header.jpg'; }
     return {title:clean, plat:isPs?'ps':'pc', cover:cover, alt:alt, icon:iconFor(clean), key:clean.toLowerCase()};
   }
   // Build normalized model
@@ -408,18 +414,28 @@
   // Загрузка: сначала пробуем Google Docs, при любой ошибке — встроенная копия.
   var srcEl = document.getElementById('src');
   function setSrc(t){ if(srcEl) srcEl.textContent = t; }
-  if(DATA_URL){
-    setSrc('загрузка из Google Docs…');
-    fetch(DATA_URL + (DATA_URL.indexOf('?')<0?'?':'&') + 't=' + Date.now())
-      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
-      .then(function(j){
-        if(j && Object.keys(j).length){ boot(j); setSrc('данные из Google Docs'); }
-        else { boot(fallback); setSrc('встроенная копия'); }
-      })
-      .catch(function(){ boot(fallback); setSrc('встроенная копия (Google Docs недоступен)'); });
-  } else {
-    boot(fallback);
-    setSrc('встроенная копия');
+
+  function loadData(){
+    if(DATA_URL){
+      setSrc('загрузка из Google Docs…');
+      fetch(DATA_URL + (DATA_URL.indexOf('?')<0?'?':'&') + 't=' + Date.now())
+        .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+        .then(function(j){
+          if(j && Object.keys(j).length){ boot(j); setSrc('данные из Google Docs'); }
+          else { boot(fallback); setSrc('встроенная копия'); }
+        })
+        .catch(function(){ boot(fallback); setSrc('встроенная копия (Google Docs недоступен)'); });
+    } else {
+      boot(fallback);
+      setSrc('встроенная копия');
+    }
   }
+
+  // Сначала карта обложек, затем данные (карта не критична — при сбое просто эмодзи).
+  fetch('covers.json?t=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : {}; })
+    .then(function(cm){ coversMap = cm || {}; })
+    .catch(function(){})
+    .then(loadData);
 })();
 </script>
