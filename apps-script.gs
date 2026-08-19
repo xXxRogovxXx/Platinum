@@ -38,6 +38,17 @@ var OVERRIDES = {
   'Brothers - A Tale of Two Sons'               : '225080'
 };
 
+/**
+ * Запусти эту функцию ОДИН раз в редакторе (▶ Run) и выдай доступ
+ * «Connect to an external service» — она открывает скрипту выход в интернет.
+ * После этого поиск обложек в Steam заработает.
+ */
+function authorize() {
+  var r = UrlFetchApp.fetch('https://store.steampowered.com/api/storesearch/?term=portal&cc=us&l=en',
+                            { muteHttpExceptions: true });
+  Logger.log('Steam ответил кодом: ' + r.getResponseCode());
+}
+
 function doGet(e) {
   e = e || {};
   var p = e.parameter || {};
