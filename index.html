@@ -154,40 +154,40 @@
   .year-meta{margin-top:10px;font-size:12px;letter-spacing:.06em;color:var(--ink-faint);font-weight:600}
   .year-meta .yc{color:var(--ink-dim)}
 
-  .games{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;align-content:start}
+  .games{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;align-content:start}
   .card{
-    display:flex;align-items:center;gap:13px;
-    background:var(--panel-solid);
-    border:1px solid var(--line-soft);
-    border-radius:12px;padding:11px 13px;
-    transition:transform .16s ease,border-color .16s ease,background .16s ease;
-    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;gap:9px;
+    background:transparent;border:0;padding:0;position:relative;
+    transition:transform .18s ease;
   }
-  .card::after{
-    content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;
-    background:linear-gradient(120deg,transparent 40%,#ffffff10 50%,transparent 60%);
-    transform:translateX(-120%);transition:transform .5s ease;
-  }
-  .card:hover{transform:translateY(-2px);border-color:var(--line);background:#151925}
-  .card:hover::after{transform:translateX(120%)}
-  .mono{
-    flex:0 0 auto;width:42px;height:42px;border-radius:9px;
+  .card:hover{transform:translateY(-4px)}
+  .art{
+    position:relative;width:100%;aspect-ratio:16/10;border-radius:12px;overflow:hidden;
+    background:linear-gradient(145deg,#1a2032,#0e111a);
+    border:1px solid var(--line);
+    box-shadow:0 12px 34px -16px #000;
     display:grid;place-items:center;
-    font-family:var(--serif);font-weight:700;font-size:20px;color:#0b0d17;
-    position:relative;
   }
-  .card.ps .mono{background:linear-gradient(145deg,var(--ps-2),var(--ps));box-shadow:0 4px 16px -6px var(--ps-glow)}
-  .card.pc .mono{background:linear-gradient(145deg,var(--pc-2),var(--pc));box-shadow:0 4px 16px -6px var(--pc-glow)}
-  .card-body{min-width:0;flex:1}
-  .card-title{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.28;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .badge{
-    margin-top:5px;display:inline-flex;align-items:center;gap:5px;
-    font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  .card.ps .art{box-shadow:0 12px 34px -16px var(--ps-glow), inset 0 0 0 1px #23324f}
+  .card.pc .art{box-shadow:0 12px 34px -16px var(--pc-glow), inset 0 0 0 1px #3a3320}
+  .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .mono-emoji{font-size:40px;filter:drop-shadow(0 3px 8px #0009);opacity:.92}
+  .art::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to top,#000a 0%,transparent 42%);opacity:0;transition:opacity .2s}
+  .card:hover .art::after{opacity:1}
+  .card:hover .art{border-color:var(--plat-3)}
+  .pbadge{
+    position:absolute;top:7px;right:7px;z-index:2;
+    width:23px;height:23px;border-radius:7px;display:grid;place-items:center;
+    font-size:12px;background:#0b0d17b3;border:1px solid #ffffff26;backdrop-filter:blur(5px);
   }
-  .card.ps .badge{color:var(--ps-2)}
-  .card.pc .badge{color:var(--pc-2)}
-  .badge .ico{font-size:11px}
+  .card.ps .pbadge{color:var(--ps-2)}
+  .card.pc .pbadge{color:var(--pc-2)}
+  .tile-title{
+    font-size:12.5px;font-weight:600;color:var(--ink-dim);line-height:1.3;padding:0 2px;text-align:center;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .card:hover .tile-title{color:var(--ink)}
 
   .empty{grid-column:1/-1;color:var(--ink-faint);padding:30px 4px;text-align:center;font-size:15px}
 
@@ -317,15 +317,19 @@
   }
 
   function boot(raw){
+  // Нормализация: строка "Title (PS5)" ИЛИ объект {t,c,p} → единый вид.
+  function normItem(it){
+    var t, cover='';
+    if(typeof it==='string'){ t=it; }
+    else { t=it.t||''; cover=it.c||''; }
+    var isPs = /\(PS5\)\s*$/.test(t) || (it && typeof it==='object' && it.p==='ps');
+    var clean = t.replace(/\s*\(PS5\)\s*$/,'').trim();
+    return {title:clean, plat:isPs?'ps':'pc', cover:cover, icon:iconFor(clean), key:clean.toLowerCase()};
+  }
   // Build normalized model
   var years = Object.keys(raw).sort();
   var model = years.map(function(y){
-    var games = raw[y].map(function(t){
-      var isPs = /\(PS5\)\s*$/.test(t);
-      var clean = t.replace(/\s*\(PS5\)\s*$/,'').trim();
-      return {title:clean, plat:isPs?'ps':'pc', icon:iconFor(clean), key:clean.toLowerCase()};
-    });
-    return {year:y, games:games};
+    return {year:y, games:(raw[y]||[]).map(normItem)};
   });
 
   var all = model.reduce(function(a,y){return a.concat(y.games)},[]);
@@ -361,12 +365,12 @@
       if(!games.length) return '';
       shown += games.length;
       var cards = games.map(function(g){
-        var badge = g.plat==='ps'
-          ? '<span class="badge"><span class="ico">◆</span>Платина</span>'
-          : '<span class="badge"><span class="ico">✦</span>100%</span>';
-        return '<div class="card '+g.plat+'">'+
-                 '<div class="mono">'+g.icon+'</div>'+
-                 '<div class="card-body"><div class="card-title">'+esc(g.title)+'</div>'+badge+'</div>'+
+        var sym = g.plat==='ps' ? '◆' : '✦';
+        var img = g.cover ? '<img loading="lazy" src="'+esc(g.cover)+'" alt="" onerror="this.remove()">' : '';
+        return '<div class="card '+g.plat+'" title="'+esc(g.title)+' — '+(g.plat==='ps'?'Платина':'100%')+'">'+
+                 '<div class="art"><span class="mono-emoji">'+g.icon+'</span>'+img+
+                   '<span class="pbadge">'+sym+'</span></div>'+
+                 '<div class="tile-title">'+esc(g.title)+'</div>'+
                '</div>';
       }).join('');
       return '<section class="year-block"><div class="year-head"><div class="year-sticky">'+

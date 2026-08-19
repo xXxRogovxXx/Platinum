@@ -22,15 +22,18 @@
 - Платину на **PS5** пометить суффиксом ` (PS5)` — например `Astro Bot (PS5)`.
 - Стопроцентовку на **ПК** — просто название.
 
-Через несколько секунд после сохранения страница подхватит изменения сама. Иконка каждой игре подбирается автоматически по названию.
+Через несколько секунд после сохранения страница подхватит изменения сама. **Обложка** новой игры находится автоматически (RAWG.io, см. [`apps-script.gs`](apps-script.gs)) и запоминается навсегда; если обложка не нашлась — показывается эмодзи-иконка по названию.
 
 ## Настройка моста Google Docs → страница (делается один раз)
 
-1. Открой Google Документ со списком → **Расширения → Apps Script**.
-2. Вставь код из [`apps-script.gs`](apps-script.gs).
-3. **Deploy → New deployment → Web app**: *Execute as — Me*, *Who has access — Anyone* → **Deploy** → скопируй Web app URL (оканчивается на `/exec`).
-4. Открой [`index.html`](index.html), найди строку `var DATA_URL = '';` и вставь URL в кавычки.
-5. Сохрани (Commit). Через минуту страница начнёт брать данные из документа.
+1. Получи бесплатный ключ RAWG: https://rawg.io/apidocs (**Get API Key**).
+2. Открой Google Документ со списком → **Расширения → Apps Script**.
+3. Слева **⚙ Project Settings → Script Properties → Add property**: имя `RAWG_KEY`, значение — твой ключ. Сохрани.
+4. Вставь код из [`apps-script.gs`](apps-script.gs) (ID документа уже вписан).
+5. **Deploy → New deployment → Web app**: *Execute as — Me*, *Who has access — Anyone* → **Deploy** → скопируй Web app URL (`…/exec`).
+6. Открой [`index.html`](index.html), найди `var DATA_URL = '';` и вставь URL в кавычки. Commit.
+
+> Обновляешь скрипт позже? **Deploy → Manage deployments → ✎ Edit → New version** — URL остаётся прежним.
 
 ## Хостинг
 
