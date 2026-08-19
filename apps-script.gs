@@ -38,7 +38,17 @@ var OVERRIDES = {
   'Brothers - A Tale of Two Sons'               : '225080'
 };
 
-function doGet() {
+function doGet(e) {
+  e = e || {};
+  var p = e.parameter || {};
+  // Диагностика: ?debug=portal — показать, что скрипт получает от Steam.
+  if (p.debug) return probe_(p.debug);
+  // Сброс кэша обложек: ?reset=platinum — очистить и перезапросить заново.
+  if (p.reset === 'platinum') {
+    PropertiesService.getScriptProperties().deleteAllProperties();
+    return json_({ cleared: true });
+  }
+
   var props   = PropertiesService.getScriptProperties();
   var stored  = props.getProperties();
   var toWrite = {};
@@ -90,9 +100,27 @@ function doGet() {
 
   if (newDone) props.setProperties(toWrite, false);
 
-  return ContentService
-      .createTextOutput(JSON.stringify(data))
-      .setMimeType(ContentService.MimeType.JSON);
+  return json_(data);
+}
+
+function json_(o) {
+  return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
+}
+
+/** Диагностика: что реально возвращает Steam на запрос из Apps Script. */
+function probe_(q) {
+  var url = 'https://store.steampowered.com/api/storesearch/?term=' + encodeURIComponent(q) + '&cc=us&l=en';
+  var out = { term: q };
+  try {
+    var r = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    out.code = r.getResponseCode();
+    var b = r.getContentText();
+    out.len = b.length;
+    out.sample = b.slice(0, 180);
+  } catch (err) {
+    out.error = String(err);
+  }
+  return json_(out);
 }
 
 /** Ищет игру в Steam по названию. Возвращает appid (строкой) или '' если надёжного совпадения нет. */
