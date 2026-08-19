@@ -22,16 +22,16 @@
 - Платину на **PS5** пометить суффиксом ` (PS5)` — например `Astro Bot (PS5)`.
 - Стопроцентовку на **ПК** — просто название.
 
-Через несколько секунд после сохранения страница подхватит изменения сама. **Обложка** новой игры находится автоматически (RAWG.io, см. [`apps-script.gs`](apps-script.gs)) и запоминается навсегда; если обложка не нашлась — показывается эмодзи-иконка по названию.
+Через несколько секунд после сохранения страница подхватит изменения сама. **Обложка** новой игры находится автоматически в Steam (см. [`apps-script.gs`](apps-script.gs), **без ключей и регистрации**) и запоминается навсегда; если обложки нет — показывается эмодзи-иконка по названию.
+
+Не нашлась или подтянулась чужая? Впиши игру в карту `OVERRIDES` в [`apps-script.gs`](apps-script.gs): `'Точное название': 'STEAM_APPID'` (или `''`, чтобы принудительно оставить эмодзи). Appid — это число из ссылки на игру в Steam.
 
 ## Настройка моста Google Docs → страница (делается один раз)
 
-1. Получи бесплатный ключ RAWG: https://rawg.io/apidocs (**Get API Key**).
-2. Открой Google Документ со списком → **Расширения → Apps Script**.
-3. Слева **⚙ Project Settings → Script Properties → Add property**: имя `RAWG_KEY`, значение — твой ключ. Сохрани.
-4. Вставь код из [`apps-script.gs`](apps-script.gs) (ID документа уже вписан).
-5. **Deploy → New deployment → Web app**: *Execute as — Me*, *Who has access — Anyone* → **Deploy** → скопируй Web app URL (`…/exec`).
-6. Открой [`index.html`](index.html), найди `var DATA_URL = '';` и вставь URL в кавычки. Commit.
+1. Открой Google Документ со списком → **Расширения → Apps Script**.
+2. Вставь код из [`apps-script.gs`](apps-script.gs) (ID документа уже вписан). Никаких ключей не нужно.
+3. **Deploy → New deployment → Web app**: *Execute as — Me*, *Who has access — Anyone* → **Deploy** → авторизуй → скопируй Web app URL (`…/exec`).
+4. Открой [`index.html`](index.html), найди `var DATA_URL = '';` и вставь URL в кавычки. Commit.
 
 > Обновляешь скрипт позже? **Deploy → Manage deployments → ✎ Edit → New version** — URL остаётся прежним.
 

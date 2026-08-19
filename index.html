@@ -154,7 +154,7 @@
   .year-meta{margin-top:10px;font-size:12px;letter-spacing:.06em;color:var(--ink-faint);font-weight:600}
   .year-meta .yc{color:var(--ink-dim)}
 
-  .games{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;align-content:start}
+  .games{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;align-content:start}
   .card{
     display:flex;flex-direction:column;gap:9px;
     background:transparent;border:0;padding:0;position:relative;
@@ -162,7 +162,7 @@
   }
   .card:hover{transform:translateY(-4px)}
   .art{
-    position:relative;width:100%;aspect-ratio:16/10;border-radius:12px;overflow:hidden;
+    position:relative;width:100%;aspect-ratio:2/3;border-radius:12px;overflow:hidden;
     background:linear-gradient(145deg,#1a2032,#0e111a);
     border:1px solid var(--line);
     box-shadow:0 12px 34px -16px #000;
@@ -319,12 +319,12 @@
   function boot(raw){
   // Нормализация: строка "Title (PS5)" ИЛИ объект {t,c,p} → единый вид.
   function normItem(it){
-    var t, cover='';
+    var t, cover='', alt='';
     if(typeof it==='string'){ t=it; }
-    else { t=it.t||''; cover=it.c||''; }
+    else { t=it.t||''; cover=it.c||''; alt=it.h||''; }
     var isPs = /\(PS5\)\s*$/.test(t) || (it && typeof it==='object' && it.p==='ps');
     var clean = t.replace(/\s*\(PS5\)\s*$/,'').trim();
-    return {title:clean, plat:isPs?'ps':'pc', cover:cover, icon:iconFor(clean), key:clean.toLowerCase()};
+    return {title:clean, plat:isPs?'ps':'pc', cover:cover, alt:alt, icon:iconFor(clean), key:clean.toLowerCase()};
   }
   // Build normalized model
   var years = Object.keys(raw).sort();
@@ -366,7 +366,7 @@
       shown += games.length;
       var cards = games.map(function(g){
         var sym = g.plat==='ps' ? '◆' : '✦';
-        var img = g.cover ? '<img loading="lazy" src="'+esc(g.cover)+'" alt="" onerror="this.remove()">' : '';
+        var img = g.cover ? '<img loading="lazy" src="'+esc(g.cover)+'" alt="" data-alt="'+esc(g.alt||'')+'" onerror="if(this.dataset.alt){this.src=this.dataset.alt;this.dataset.alt=\'\'}else{this.remove()}">' : '';
         return '<div class="card '+g.plat+'" title="'+esc(g.title)+' — '+(g.plat==='ps'?'Платина':'100%')+'">'+
                  '<div class="art"><span class="mono-emoji">'+g.icon+'</span>'+img+
                    '<span class="pbadge">'+sym+'</span></div>'+
