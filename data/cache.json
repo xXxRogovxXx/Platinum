@@ -4210,5 +4210,29 @@
    }
   ],
   "ts": 1787129511106
+ },
+ "Star Wars: Zero Company": {
+  "appid": "2075800",
+  "ach": [
+   {
+    "n": "Veteran",
+    "d": "Beat the game on Normal or higher",
+    "p": 0.1,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/2075800/b589d5bc5023196fef0ad002cfa50e7f86bf49b8.jpg"
+   },
+   {
+    "n": "Operator",
+    "d": "Beat the game on Hard or higher",
+    "p": 0.1,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/2075800/e980e679020844d8a916b315e86f92cb38feda78.jpg"
+   },
+   {
+    "n": "Captain",
+    "d": "Beat the game on Expert",
+    "p": 0.1,
+    "i": "https://shared.akamai.steamstatic.com/community_assets/images/apps/2075800/450276af01688b3c7a506fe902d531377211fd32.jpg"
+   }
+  ],
+  "ts": 1787997247267
  }
 }
