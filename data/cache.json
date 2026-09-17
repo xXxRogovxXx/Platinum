@@ -4234,5 +4234,34 @@
    }
   ],
   "ts": 1787997247267
+ },
+ "Resonance: A Plague Tale Legacy": {
+  "appid": "2713000",
+  "ach": [
+   {
+    "n": "Hoarder",
+    "d": "Collect all Relics of the Present and the Past",
+    "p": 6.9,
+    "i": "https://shared.fastly.steamstatic.com/community_assets/images/apps/2713000/494b95751947711847859e7c3b9b99979f941c90.jpg"
+   },
+   {
+    "n": "Superstitious",
+    "d": "Collect all Charms",
+    "p": 7.2,
+    "i": "https://shared.fastly.steamstatic.com/community_assets/images/apps/2713000/157fa48265be940a9b16c5e767ec1dce36ae7fbb.jpg"
+   },
+   {
+    "n": "Excessive force",
+    "d": "",
+    "p": 7.3,
+    "i": "https://shared.fastly.steamstatic.com/community_assets/images/apps/2713000/63ab6b40d2a105082aaecf0a399fcaeb1eae915c.jpg"
+   }
+  ],
+  "ts": 1789664514174
+ },
+ "Marvel’s Wolverine": {
+  "appid": "",
+  "ach": [],
+  "ts": 1789664514917
  }
 }
